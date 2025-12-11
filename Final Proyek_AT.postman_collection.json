@@ -1,0 +1,1181 @@
+{
+	"info": {
+		"_postman_id": "716ea56e-aeae-4b8e-beb5-24b8c8e2c269",
+		"name": "Final Proyek_AT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39127740",
+		"_collection_link": "https://proyek-akhir-ppmpl-kelompok-4.postman.co/workspace/PROYEK-AKHIR-PPMPL-KELOMPOK-4-W~c1271eb2-cbb7-416c-836c-01887ff39a1e/collection/39127740-716ea56e-aeae-4b8e-beb5-24b8c8e2c269?action=share&source=collection_link&creator=39127740"
+	},
+	"item": [
+		{
+			"name": "Current Weather",
+			"item": [
+				{
+					"name": "Kota Valid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify response structure and values\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Status code\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    // Properti utama\r",
+									"    pm.expect(response).to.have.property(\"coord\");\r",
+									"    pm.expect(response).to.have.property(\"weather\");\r",
+									"    pm.expect(response).to.have.property(\"main\");\r",
+									"    pm.expect(response).to.have.property(\"wind\");\r",
+									"    pm.expect(response.name).to.eql(\"Medan\");\r",
+									"\r",
+									"    // Nilai tertentu\r",
+									"    pm.expect(response.sys.country).to.eql(\"ID\");\r",
+									"    pm.expect(response.main.temp).to.be.within(273.15, 373.15);\r",
+									"\r",
+									"    // Struktur array weather\r",
+									"    pm.expect(response.weather).to.be.an(\"array\").that.is.not.empty;\r",
+									"    pm.expect(response.weather[0]).to.have.property(\"id\");\r",
+									"    pm.expect(response.weather[0]).to.have.property(\"main\");\r",
+									"    pm.expect(response.weather[0]).to.have.property(\"description\");\r",
+									"\r",
+									"    // Properti opsional\r",
+									"    if (response.rain) {\r",
+									"        pm.expect(response.rain).to.have.property(\"1h\");\r",
+									"        pm.expect(response.rain[\"1h\"]).to.be.a(\"number\");\r",
+									"    }\r",
+									"\r",
+									"    // Tipe data\r",
+									"    pm.expect(response.main.temp).to.be.a(\"number\");\r",
+									"    pm.expect(response.name).to.be.a(\"string\");\r",
+									"\r",
+									"    // Waktu\r",
+									"    pm.expect(response.sys.sunrise).to.be.a(\"number\");\r",
+									"    pm.expect(response.sys.sunset).to.be.a(\"number\");\r",
+									"    pm.expect(response.sys.sunrise).to.be.below(response.sys.sunset);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?q=Medan&appid={{API_key}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Medan",
+									"description": "Nama kota yang ingin dicari cuaca"
+								},
+								{
+									"key": "appid",
+									"value": "{{API_key}}",
+									"description": "Kunci API yang didapatkan dari OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kota Invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"\r",
+									"    // console.log(\">>>\"+pm.response.code)\r",
+									"    // pm.expect().to.equal(404)\r",
+									"});\r",
+									"\r",
+									"// Verifikasi isi body respons\r",
+									"pm.test(\"Error message is 'city not found'\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response.cod).to.eql(\"404\");\r",
+									"    pm.expect(response.message).to.eql(\"city not found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?q=aaa&appid={{API_key}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "aaa",
+									"description": "Nama kota yang tidak ada atau terdaftar untuk cari cuacanya"
+								},
+								{
+									"key": "appid",
+									"value": "{{API_key}}",
+									"description": "Kunci API yang didapatkan dari OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Parameter Kota Kosong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Verifikasi isi body respons\r",
+									"pm.test(\"Error message is 'Nothing to geocode'\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response.cod).to.eql(\"400\");\r",
+									"    pm.expect(response.message).to.eql(\"Nothing to geocode\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?q=&appid={{API_key}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "",
+									"description": "Parameter kota kosong"
+								},
+								{
+									"key": "appid",
+									"value": "{{API_key}}",
+									"description": "Kunci API yang didapatkan dari OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid API",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"// Verifikasi isi body respons\r",
+									"pm.test(\"Error message is 'Invalid API key. Please see https://openweathermap.org/faq#error401 for more info.'\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response.cod).to.eql(401);  // Bandingkan dengan angka 401, bukan string\r",
+									"    pm.expect(response.message).to.include(\"Invalid API key. Please see https://openweathermap.org/faq#error401 for more info.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?q=Medan&appid=12341211",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Medan",
+									"description": "Nama kota yang ingin dicari cuaca"
+								},
+								{
+									"key": "appid",
+									"value": "12341211",
+									"description": "Kunci API yang dinput invalid atau tidak sesuai untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API kosong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// // Cek status code\r",
+									"// pm.test(\"Status code is 401\", function () {\r",
+									"//     pm.response.to.have.status(401);\r",
+									"// });\r",
+									"\r",
+									"// // Cek jika response JSON valid\r",
+									"// pm.test(\"Response is valid JSON\", function () {\r",
+									"//     pm.response.to.be.json;\r",
+									"// });\r",
+									"\r",
+									"// // Cek apakah response memiliki data yang valid\r",
+									"// // pm.test(\"Valid response data\", function () {\r",
+									"// //     const jsonData = pm.response.json();\r",
+									"// //     pm.expect(jsonData).to.have.property('weather');\r",
+									"// //     pm.expect(jsonData).to.have.property('main');\r",
+									"// // });\r",
+									"\r",
+									"// // Cek jika API key tidak valid (kode 401)\r",
+									"// pm.test(\"Handle Invalid API Key error\", function () {\r",
+									"//     const jsonData = pm.response.json();\r",
+									"//     if (jsonData.cod === 401) {\r",
+									"//         pm.expect(jsonData.cod).to.equal(401);\r",
+									"//         pm.expect(jsonData.message).to.equal('Invalid API key. Please see https://openweathermap.org/faq#error401 for more info.');\r",
+									"//         console.log('Error: ' + jsonData.message); // Tampilkan error di console Postman\r",
+									"//     }\r",
+									"// });\r",
+									"\r",
+									"// Cek status code\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"// Cek jika response JSON valid\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"// Cek jika API key tidak valid (kode 401)\r",
+									"pm.test(\"Handle Invalid API Key error\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    if (jsonData.cod === 401) {\r",
+									"        pm.expect(jsonData.cod).to.equal(401);\r",
+									"        pm.expect(jsonData.message).to.equal('Invalid API key. Please see https://openweathermap.org/faq#error401 for more info.');\r",
+									"        console.log('Error: ' + jsonData.message); // Tampilkan error di console Postman\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"// Cek jika response memiliki data yang valid hanya jika cod = 200\r",
+									"pm.test(\"Valid response data\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    if (jsonData.cod === 200) {\r",
+									"        pm.expect(jsonData).to.have.property('weather');\r",
+									"        pm.expect(jsonData).to.have.property('main');\r",
+									"        console.log('Weather Data:', jsonData); // Tampilkan data cuaca di console Postman\r",
+									"    } else {\r",
+									"        console.log('Tidak ada data cuaca karena kesalahan API Key atau permintaan lainnya.');\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?q=Medan",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Medan"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Weather Forecast Data:",
+			"item": [
+				{
+					"name": "Kota Valid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/forecast?q=Bandung&appid={{API_key}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Bandung",
+									"description": "Nama kota yang ingin dicari cuaca"
+								},
+								{
+									"key": "appid",
+									"value": "{{API_key}}",
+									"description": "Kunci API yang didapatkan dari OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Key Invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401); // Memastikan status kode adalah 401 (Unauthorized)\r",
+									"});\r",
+									"\r",
+									"// Verifikasi respons JSON\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json; // Memastikan respons memiliki format JSON\r",
+									"});\r",
+									"\r",
+									"// Tangani error \"Invalid API key\"\r",
+									"pm.test(\"Handle 'Invalid API key' error\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan 'cod' adalah 401\r",
+									"    pm.expect(response.cod).to.eql(401);\r",
+									"\r",
+									"    // Memastikan pesan error sesuai\r",
+									"    pm.expect(response.message).to.include(\"Invalid API key. Please see https://openweathermap.org/faq#error401 for more info.\");\r",
+									"\r",
+									"    // Log pesan error di console\r",
+									"    console.log(\"Error: \" + response.message);\r",
+									"});\r",
+									"\r",
+									"// Pastikan respons tidak mengandung data cuaca yang valid\r",
+									"pm.test(\"Response does not contain valid data\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan properti seperti 'city' dan 'list' tidak ada\r",
+									"    pm.expect(response).to.not.have.property(\"city\");\r",
+									"    pm.expect(response).to.not.have.property(\"list\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/forecast?q={{city_name}}&appid=131324255112",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{city_name}}",
+									"description": "Nama kota yang ingin dicari perkiraan cuaca berdasarkan kota yang terdaftar pada variabel env"
+								},
+								{
+									"key": "appid",
+									"value": "131324255112",
+									"description": "Kunci API yang tidak terdaftar OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Api Kosong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401); // Memastikan status kode adalah 401 (Unauthorized)\r",
+									"});\r",
+									"\r",
+									"// Verifikasi respons JSON\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json; // Memastikan respons memiliki format JSON\r",
+									"});\r",
+									"\r",
+									"// Tangani error \"Invalid API key\"\r",
+									"pm.test(\"Handle 'Invalid API key' error\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan 'cod' adalah 401, baik dalam bentuk string maupun number\r",
+									"    pm.expect(response.cod).to.be.oneOf([\"401\", 401]);\r",
+									"\r",
+									"    // Memastikan pesan error sesuai\r",
+									"    pm.expect(response.message).to.include(\"Invalid API key\");\r",
+									"\r",
+									"    // Log pesan error di console\r",
+									"    console.log(\"Error: \" + response.message);\r",
+									"});\r",
+									"\r",
+									"// Pastikan respons tidak mengandung data cuaca yang valid\r",
+									"pm.test(\"Response does not contain valid data\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan properti seperti 'city' dan 'list' tidak ada\r",
+									"    pm.expect(response).to.not.have.property(\"city\");\r",
+									"    pm.expect(response).to.not.have.property(\"list\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/forecast?q={{city_name}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{city_name}}",
+									"description": "Nama kota yang ingin dicari perkiraan cuaca berdasarkan kota yang terdaftar pada variabel env"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kota Kosong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400); // Memastikan status kode adalah 400 untuk error \"Nothing to geocode\"\r",
+									"});\r",
+									"\r",
+									"// Verifikasi respons JSON\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json; // Memastikan respons dalam format JSON\r",
+									"});\r",
+									"\r",
+									"// Tangani error \"Nothing to geocode\" untuk status kode 400\r",
+									"pm.test(\"Handle 'Nothing to geocode' error\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Memastikan kode respons adalah 400\r",
+									"    pm.expect(response.cod).to.eql(\"400\");\r",
+									"\r",
+									"    // Memastikan pesan error sesuai\r",
+									"    pm.expect(response.message).to.include(\"Nothing to geocode\");\r",
+									"\r",
+									"    // Log pesan error di console\r",
+									"    console.log(\"Error: \" + response.message);\r",
+									"});\r",
+									"\r",
+									"// Pastikan respons tidak mengandung data yang valid\r",
+									"pm.test(\"Response does not contain valid data\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Cek properti yang seharusnya tidak ada\r",
+									"    pm.expect(response).to.not.have.property(\"city\");\r",
+									"    pm.expect(response).to.not.have.property(\"list\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/forecast?appid={{API_key}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "appid",
+									"value": "{{API_key}}",
+									"description": "Kunci API yang tidak ada untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API dan Kota invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi respons JSON\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json; // Memastikan respons memiliki format JSON\r",
+									"});\r",
+									"\r",
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 401 for invalid API key\", function () {\r",
+									"    pm.response.to.have.status(401); // Memastikan status kode adalah 401 (Unauthorized)\r",
+									"});\r",
+									"\r",
+									"// Tangani error \"Invalid API key\"\r",
+									"pm.test(\"Handle 'Invalid API key' error\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan 'cod' adalah 401\r",
+									"    pm.expect(response.cod).to.eql(401);\r",
+									"\r",
+									"    // Memastikan pesan error sesuai\r",
+									"    pm.expect(response.message).to.include(\"Invalid API key. Please see https://openweathermap.org/faq#error401 for more info.\");\r",
+									"\r",
+									"    // Log pesan error di console\r",
+									"    console.log(\"Error: \" + response.message);\r",
+									"});\r",
+									"\r",
+									"// Tangani kota tidak valid\r",
+									"pm.test(\"Handle 'Invalid city name' error when API key is valid\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Periksa jika API key valid dan respons menunjukkan kota tidak ditemukan\r",
+									"    if (response.cod === \"404\" && response.message.includes(\"city not found\")) {\r",
+									"        pm.expect(response.message).to.include(\"city not found\"); // Pesan error untuk kota tidak valid\r",
+									"        console.log(\"Error: Invalid city name\");\r",
+									"    } else {\r",
+									"        pm.expect(response.cod).to.eql(401); // Jika API key tetap tidak valid, error harus tetap sesuai\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/forecast?q=affssd&appid=131415411",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "affssd",
+									"description": "Nama kota yang tidak terdaftar"
+								},
+								{
+									"key": "appid",
+									"value": "131415411",
+									"description": "Kunci API yang tidak terdaftar OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Weather by Coordinates (Latitude/Longitude)",
+			"item": [
+				{
+					"name": "Tanpa latitude",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi respons JSON\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json; // Memastikan respons memiliki format JSON\r",
+									"});\r",
+									"\r",
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400); // Memastikan status kode adalah 400 (Bad Request)\r",
+									"});\r",
+									"\r",
+									"// Tangani error \"Nothing to geocode\"\r",
+									"pm.test(\"Handle 'Nothing to geocode' error\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan 'cod' adalah \"400\"\r",
+									"    pm.expect(response.cod).to.eql(\"400\");\r",
+									"\r",
+									"    // Memastikan pesan error sesuai\r",
+									"    pm.expect(response.message).to.include(\"Nothing to geocode\");\r",
+									"\r",
+									"    // Log pesan error di console\r",
+									"    console.log(\"Error: \" + response.message);\r",
+									"});\r",
+									"\r",
+									"// Pastikan tidak ada data cuaca yang valid\r",
+									"pm.test(\"Response does not contain valid weather data\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan properti seperti 'weather' dan 'main' tidak ada\r",
+									"    pm.expect(response).to.not.have.property(\"weather\");\r",
+									"    pm.expect(response).to.not.have.property(\"main\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?lon={{longitude}}&appid={{API_key}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "lon",
+									"value": "{{longitude}}",
+									"description": "Longitude (garis bujur) lokasi yang ingin dicari cuacanya. Nilainya berupa angka desimal, positif untuk wilayah timur Greenwich, negatif untuk barat."
+								},
+								{
+									"key": "appid",
+									"value": "{{API_key}}",
+									"description": "Kunci API yang didapatkan dari OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tanpa lat dan lon",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 400 for missing lat and lon\", function () {\r",
+									"    pm.response.to.have.status(400); // Memastikan status kode adalah 400 (Bad Request)\r",
+									"});\r",
+									"\r",
+									"// Verifikasi respons JSON\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json; // Memastikan respons memiliki format JSON\r",
+									"});\r",
+									"\r",
+									"// Tangani error \"Nothing to geocode\" saat lat dan lon kosong\r",
+									"pm.test(\"Handle 'Nothing to geocode' error for missing lat and lon\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Memastikan 'cod' adalah 400\r",
+									"    pm.expect(response.cod).to.eql(\"400\");\r",
+									"\r",
+									"    // Memastikan pesan error sesuai\r",
+									"    pm.expect(response.message).to.include(\"Nothing to geocode\");\r",
+									"\r",
+									"    // Log pesan error di console\r",
+									"    console.log(\"Error: \" + response.message);\r",
+									"});\r",
+									"\r",
+									"// Pastikan tidak ada data cuaca yang valid\r",
+									"pm.test(\"Response does not contain valid data\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan properti seperti 'weather' atau 'main' tidak ada\r",
+									"    pm.expect(response).to.not.have.property(\"weather\");\r",
+									"    pm.expect(response).to.not.have.property(\"main\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?appid={{API_key}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "appid",
+									"value": "{{API_key}}",
+									"description": "Kunci API yang didapatkan dari OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Koordinat kota lain",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi status kode untuk respons yang valid\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401); // Memastikan status kode adalah 401 \r",
+									"});\r",
+									"\r",
+									"// Verifikasi respons JSON\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json; // Memastikan respons adalah dalam format JSON\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Tangani error ketika status kode bukan 401\r",
+									"pm.test(\"Handle non-401 status code errors\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    \r",
+									"    // Cek jika kode bukan 401, misalnya 400 atau 401\r",
+									"    if (response.cod !== \"401\") {\r",
+									"        pm.expect(response.cod).to.not.eql(\"401\"); // Pastikan tidak ada status 401\r",
+									"        console.log(\"Error: \" + response.message); // Tampilkan pesan error di console\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/forecast?lat=51.5074&lon=-0.1278&appid={{city_name}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "51.5074",
+									"description": "Longitude (garis bujur) lokasi lain yang ingin dicari cuacanya. Nilainya berupa angka desimal, positif untuk wilayah timur Greenwich, negatif untuk barat."
+								},
+								{
+									"key": "lon",
+									"value": "-0.1278",
+									"description": "Longitude (garis bujur) lokasi lain, tidak terdaftar pada variabel yang ingin dicari cuacanya. Nilainya berupa angka desimal, positif untuk wilayah timur Greenwich, negatif untuk barat."
+								},
+								{
+									"key": "appid",
+									"value": "{{city_name}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Key kosong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifikasi status kode\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401); // Memastikan status kode adalah 401 (Unauthorized)\r",
+									"});\r",
+									"\r",
+									"// Verifikasi respons JSON\r",
+									"pm.test(\"Response is valid JSON\", function () {\r",
+									"    pm.response.to.be.json; // Memastikan respons memiliki format JSON\r",
+									"});\r",
+									"\r",
+									"// Tangani error \"Invalid API key\"\r",
+									"pm.test(\"Handle 'Invalid API key' error\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan 'cod' adalah 401, baik dalam bentuk string maupun number\r",
+									"    pm.expect(response.cod).to.be.oneOf([\"401\", 401]);\r",
+									"\r",
+									"    // Memastikan pesan error sesuai\r",
+									"    pm.expect(response.message).to.include(\"Invalid API key\");\r",
+									"\r",
+									"    // Log pesan error di console\r",
+									"    console.log(\"Error: \" + response.message);\r",
+									"});\r",
+									"\r",
+									"// Pastikan respons tidak mengandung data cuaca yang valid\r",
+									"pm.test(\"Response does not contain valid data\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Pastikan properti seperti 'city' dan 'list' tidak ada\r",
+									"    pm.expect(response).to.not.have.property(\"city\");\r",
+									"    pm.expect(response).to.not.have.property(\"list\");\r",
+									"\r",
+									"    \r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?lat={{latitude}}&lon={{longitude}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "{{latitude}}",
+									"description": "Latitude (garis lintang) lokasi yang ingin dicari cuacanya. Nilainya berupa angka desimal, positif untuk utara ekuator, negatif untuk selatan."
+								},
+								{
+									"key": "lon",
+									"value": "{{longitude}}",
+									"description": "Longitude (garis bujur) lokasi yang ingin dicari cuacanya. Nilainya berupa angka desimal, positif untuk wilayah timur Greenwich, negatif untuk barat."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lat,Lon,API valid",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "api.openweathermap.org/data/2.5/weather?lat={{latitude}}&lon={{longitude}}&appid={{API_key}}",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "{{latitude}}",
+									"description": "Latitude (garis lintang) lokasi yang ingin dicari cuacanya. Nilainya berupa angka desimal, positif untuk utara ekuator, negatif untuk selatan."
+								},
+								{
+									"key": "lon",
+									"value": "{{longitude}}",
+									"description": "Longitude (garis bujur) lokasi yang ingin dicari cuacanya. Nilainya berupa angka desimal, positif untuk wilayah timur Greenwich, negatif untuk barat."
+								},
+								{
+									"key": "appid",
+									"value": "{{API_key}}",
+									"description": "Kunci API yang didapatkan dari OpenWeatherMap untuk autentikasi permintaan."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoint: Cuaca Saat Ini",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has temperature\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property(\"main\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "api.openweathermap.org/data/2.5/weather?q={{city_name}}&appid={{API_key}}",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city_name}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{API_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoint: Perkiraan Cuaca",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "api.openweathermap.org/data/2.5/forecast?q={{city_name}}&appid={{API_key}}",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"forecast"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city_name}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{API_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoint: Cuaca Berdasarkan Koordinat",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "api.openweathermap.org/data/2.5/weather?lat={{latitude}}}&lon={{longitude}}&appid={{API_key}}",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": "{{latitude}}}"
+						},
+						{
+							"key": "lon",
+							"value": "{{longitude}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{API_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
